@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ru" class="lenis lenis-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Karelian Craft — Энергия дикой Карелии</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            darkBark: '#3E2723',
+            wildBerry: '#4A1525',
+            oatCream: '#FDFBF7',
+            honey: '#E8B253',
+            pineNeedle: '#2D4A3E',
+            cloudberry: '#D95C14',
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          },
+          transitionTimingFunction: {
+            'expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Базовые стили и сброс скроллбара */
+    body {
+      background-color: #FDFBF7; /* oatCream */
+      color: #3E2723; /* darkBark */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      overflow-x: hidden;
+    }
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* Lenis Smooth Scroll */
+    html.lenis { height: auto; }
+    .lenis.lenis-smooth { scroll-behavior: auto; }
+    .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+    .lenis.lenis-stopped { overflow: hidden; }
+
+    /* Утилиты для эффектов */
+    .clip-diagonal {
+      clip-path: polygon(0 8vh, 100% 0, 100% calc(100% - 8vh), 0 100%);
+    }
+    
+    .glass {
+      background: rgba(253, 251, 247, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .dark-glass {
+      background: rgba(62, 39, 35, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    /* Анимация левитации */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* Скрытие элементов до загрузки GSAP */
+    .gsap-reveal { opacity: 0; transform: translateY(30px); }
+    
+    /* Loader */
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #FDFBF7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .loader-text { font-size: 2rem; overflow: hidden; }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-cloudberry selection:text-white">
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-text font-serif text-darkBark flex flex-col items-center">
+      <span class="text-sm tracking-widest uppercase font-sans mb-4 text-pineNeedle">Загрузка атмосферы</span>
+      <span id="scramble-text" class="text-4xl md:text-6xl text-wildBerry">Karelian Craft</span>
+    </div>
+  </div>
+
+  <!-- Навигация -->
+  <nav class="fixed w-full top-0 z-50 p-6 flex justify-between items-center mix-blend-difference text-oatCream">
+    <div class="font-serif text-2xl tracking-tighter cursor-pointer">KC.</div>
+    <div class="hidden md:flex gap-8 text-sm uppercase tracking-widest font-medium">
+      <a href="#story" class="hover:text-honey transition-colors duration-300">История</a>
+      <a href="#product" class="hover:text-honey transition-colors duration-300">Продукт</a>
+    </div>
+    <button class="px-6 py-3 rounded-full border border-oatCream hover:bg-oatCream hover:text-darkBark transition-all duration-300 text-sm uppercase tracking-widest relative overflow-hidden group">
+      <span class="relative z-10">Заказать</span>
+    </button>
+  </nav>
+
+  <!-- Шаг 1: Экспозиция (Hero) -->
+  <section class="relative h-screen w-full flex items-center justify-center overflow-hidden bg-pineNeedle">
+    <!-- Фоновая атмосферная иллюстрация (имитация) -->
+    <div class="absolute inset-0 z-0">
+      <img src="https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=2041&auto=format&fit=crop" alt="" class="w-full h-full object-cover opacity-60">
+      <div class="absolute inset-0 bg-gradient-to-b from-darkBark/40 to-darkBark/80"></div>
+    </div>
+    
+    <div class="relative z-10 text-center px-4 flex flex-col items-center">
+      <p class="gsap-reveal text-honey uppercase tracking-[0.3em] text-sm mb-6">Аутентичные мюсли</p>
+      <h1 class="gsap-reveal font-serif text-5xl md:text-8xl lg:text-9xl text-oatCream leading-[0.9] tracking-tight max-w-6xl">
+        Энергия дикой <br><i class="text-cloudberry">Карелии</i> в ложке
+      </h1>
+      <p class="gsap-reveal mt-8 text-oatCream/80 max-w-md mx-auto text-lg md:text-xl font-light">
+        Чистая бодрость северной природы. Без сахара, с дикими ягодами и кедровым орехом.
+      </p>
+    </div>
+
+    <!-- Плавающий элемент переднего плана (Абстракция ингредиентов) -->
+    <div class="absolute bottom-10 right-10 md:bottom-20 md:right-32 w-48 aspect-[3/4] animate-float z-20 hidden md:block">
+      <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?q=80&w=1932&auto=format&fit=crop" alt="" class="w-full h-full object-cover rounded-2xl shadow-2xl shadow-black/50">
+    </div>
+  </section>
+
+  <!-- Шаг 2: Проблема (Диагональный разлом) -->
+  <section class="relative bg-oatCream py-32 md:py-48 clip-diagonal -mt-[8vh] z-20 flex items-center">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+      <div class="flex flex-col gap-6 relative">
+        <div class="absolute -left-10 -top-10 w-32 aspect-[3/4] bg-darkBark/5 rounded-xl rotate-12 -z-10"></div>
+        <h2 class="font-serif text-4xl md:text-6xl text-darkBark leading-tight">
+          Суетливое утро <br>и быстрые углеводы?
+        </h2>
+        <p class="text-lg text-darkBark/70 max-w-md">
+          Синтетические составы масс-маркета дают короткий всплеск и резкий спад. Тяжесть вместо энергии, сахар вместо пользы. Мы знаем эту боль.
+        </p>
+      </div>
+      <!-- Геометрические наложения (3:4 ratio) -->
+      <div class="relative w-full aspect-[3/4] md:w-3/4 mx-auto">
+        <img src="https://images.unsplash.com/photo-1517673132405-a56a62b18caf?q=80&w=1956&auto=format&fit=crop" alt="" class="w-full h-full object-cover rounded-t-full rounded-b-sm grayscale opacity-80 mix-blend-multiply">
+        <div class="absolute inset-0 bg-wildBerry/10 mix-blend-overlay"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Шаг 3: Решение (Rack Focus) -->
+  <section id="solution" class="relative min-h-[120vh] bg-darkBark flex items-center justify-center overflow-hidden py-32">
+    <!-- Фон, который будет размываться -->
+    <div class="absolute inset-0 z-0 rack-bg">
+      <img src="https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=2074&auto=format&fit=crop" alt="" class="w-full h-full object-cover opacity-40">
+    </div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-6 w-full flex flex-col items-center">
+      <h2 class="font-serif text-oatCream text-4xl md:text-7xl text-center mb-16 max-w-3xl">
+        Переключите фокус <br><span class="italic text-honey">на чистоту и силу</span>
+      </h2>
+      
+      <!-- 3D рендер упаковки в формате 3:4 -->
+      <div class="w-64 md:w-96 aspect-[3/4] animate-float rack-product relative">
+        <!-- Стеклянная подложка для премиальности -->
+        <div class="absolute inset-0 dark-glass rounded-3xl -rotate-6 scale-105 shadow-2xl"></div>
+        <img src="https://images.unsplash.com/photo-1559598467-f8b76c8155d0?q=80&w=1936&auto=format&fit=crop" alt="" class="w-full h-full object-cover rounded-2xl relative z-10 shadow-2xl shadow-black">
+      </div>
+    </div>
+  </section>
+
+  <!-- Шаг 4: Достижения (Bento UI) -->
+  <section class="bg-oatCream py-32 px-6">
+    <div class="max-w-7xl mx-auto">
+      <div class="mb-16 flex justify-between items-end">
+        <h2 class="font-serif text-5xl text-darkBark">Факты без <br>компромиссов</h2>
+        <p class="text-sm uppercase tracking-widest text-pineNeedle mb-2 hidden md:block">Сертифицированное качество</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+        <!-- Блок 1 -->
+        <div class="bg-white rounded-[2rem] p-10 flex flex-col justify-between shadow-sm border border-darkBark/5">
+          <div class="w-12 h-12 rounded-full bg-honey/20 flex items-center justify-center text-honey">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+          </div>
+          <div>
+            <div class="text-6xl font-serif text-wildBerry mb-2 flex items-baseline">
+              <span class="counter" data-target="0">0</span>%
+            </div>
+            <p class="text-darkBark/70 font-medium">Добавленного сахара. Исключительно природная сладость.</p>
+          </div>
+        </div>
+        
+        <!-- Блок 2 (Широкий) -->
+        <div class="bg-pineNeedle text-oatCream rounded-[2rem] p-10 flex flex-col justify-between md:col-span-2 shadow-sm relative overflow-hidden group">
+          <img src="https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=2070&auto=format&fit=crop" alt="" class="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-105 transition-transform duration-1000">
+          <div class="relative z-10">
+            <div class="text-sm uppercase tracking-widest opacity-80 mb-8">Ингредиенты</div>
+            <div class="text-5xl md:text-7xl font-serif mb-2 flex items-baseline">
+              <span class="counter" data-target="100">0</span>%
+            </div>
+            <p class="text-lg opacity-90 max-w-md">Ручной сбор диких ягод в лесах Карелии. Кедровые орехи и таежный мед.</p>
+          </div>
+        </div>
+
+        <!-- Блок 3 (Высокий 3:4 стиль) -->
+        <div class="bg-darkBark text-oatCream rounded-[2rem] p-10 flex flex-col justify-between md:row-span-2 shadow-sm relative overflow-hidden">
+           <img src="https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?q=80&w=1974&auto=format&fit=crop" alt="" class="absolute inset-0 w-full h-full object-cover opacity-30 mix-blend-luminosity">
+           <div class="relative z-10 h-full flex flex-col justify-end">
+              <div class="text-5xl font-serif text-honey mb-4">ЭКО</div>
+              <p class="text-oatCream/80">Сертифицированное чистое производство без консервантов.</p>
+           </div>
+        </div>
+
+        <!-- Блок 4 -->
+        <div class="bg-cloudberry text-oatCream rounded-[2rem] p-10 flex flex-col justify-between shadow-sm">
+          <div class="text-sm uppercase tracking-widest opacity-80">Доверие</div>
+          <div>
+            <div class="text-5xl md:text-6xl font-serif mb-2 flex items-baseline">
+              ><span class="counter" data-target="15000">0</span>
+            </div>
+            <p class="opacity-90">Заряженных утр у наших клиентов в этом году.</p>
+          </div>
+        </div>
+
+        <!-- Блок 5 -->
+        <div class="bg-white rounded-[2rem] p-10 flex flex-col justify-center items-center text-center shadow-sm border border-darkBark/5">
+            <p class="font-serif text-2xl text-darkBark italic">«Энергия для сложных задач до самого обеда»</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Шаг 6: Социальное доказательство (Журнальная верстка) -->
+  <section class="py-32 bg-oatCream border-t border-darkBark/10">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-20 items-center">
+        <!-- 3:4 Портрет -->
+        <div class="relative w-full aspect-[3/4] max-w-md mx-auto">
+          <!-- Тонкая рамка -->
+          <div class="absolute -inset-4 border border-darkBark/20 rounded-t-full"></div>
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1964&auto=format&fit=crop" alt="" class="w-full h-full object-cover rounded-t-full rounded-b-2xl grayscale hover:grayscale-0 transition-all duration-700">
+          <div class="absolute bottom-6 left-6 glass px-6 py-3 rounded-2xl">
+            <p class="font-bold text-darkBark">Анна С.</p>
+            <p class="text-xs text-darkBark/70 uppercase tracking-wider">Предприниматель</p>
+          </div>
+        </div>
+        
+        <div class="flex flex-col gap-8">
+          <svg class="w-16 h-16 text-honey opacity-50" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/></svg>
+          <h3 class="font-serif text-3xl md:text-5xl text-darkBark leading-snug">
+            Вкус дикой природы, который полностью изменил мою утреннюю рутину. Никакой тяжести, только чистый фокус.
+          </h3>
+          <button class="w-max mt-4 text-sm font-medium uppercase tracking-widest text-wildBerry border-b border-wildBerry pb-1 hover:text-darkBark hover:border-darkBark transition-colors">Читать все истории</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Шаг 7: Продукт (Стекломорфизм) -->
+  <section id="product" class="py-32 relative bg-darkBark text-oatCream overflow-hidden">
+    <!-- Абстрактный фон -->
+    <div class="absolute inset-0 opacity-30">
+       <img src="https://images.unsplash.com/photo-1511496350325-1e3557e0e7a2?q=80&w=2070&auto=format&fit=crop" alt="" class="w-full h-full object-cover">
+    </div>
+    
+    <div class="relative z-10 max-w-7xl mx-auto px-6">
+      <h2 class="font-serif text-5xl md:text-7xl text-center mb-24">Линейка вкусов</h2>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Карточка 1 -->
+        <div class="dark-glass rounded-3xl p-8 flex flex-col items-center text-center group cursor-pointer hover:-translate-y-2 transition-transform duration-500">
+          <div class="w-full aspect-[3/4] mb-8 overflow-hidden rounded-2xl relative">
+             <div class="absolute inset-0 bg-wildBerry/20 mix-blend-color z-10 group-hover:opacity-0 transition-opacity"></div>
+             <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?q=80&w=1932&auto=format&fit=crop" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+          </div>
+          <h3 class="font-serif text-2xl mb-2 text-honey">Энергия Тайги</h3>
+          <p class="text-sm opacity-70 mb-6">Морошка • Мед • Кедр</p>
+          <span class="border border-oatCream/30 px-6 py-2 rounded-full text-xs uppercase tracking-widest group-hover:bg-oatCream group-hover:text-darkBark transition-colors">Выбрать</span>
+        </div>
+
+        <!-- Карточка 2 -->
+        <div class="dark-glass rounded-3xl p-8 flex flex-col items-center text-center group cursor-pointer hover:-translate-y-2 transition-transform duration-500 md:-translate-y-12">
+          <div class="w-full aspect-[3/4] mb-8 overflow-hidden rounded-2xl relative">
+             <div class="absolute inset-0 bg-cloudberry/20 mix-blend-color z-10 group-hover:opacity-0 transition-opacity"></div>
+             <img src="https://images.unsplash.com/photo-1559598467-f8b76c8155d0?q=80&w=1936&auto=format&fit=crop" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+          </div>
+          <h3 class="font-serif text-2xl mb-2 text-cloudberry">Ягодный Детокс</h3>
+          <p class="text-sm opacity-70 mb-6">Брусника • Лен • Ромашка</p>
+          <span class="border border-oatCream/30 px-6 py-2 rounded-full text-xs uppercase tracking-widest group-hover:bg-oatCream group-hover:text-darkBark transition-colors">Выбрать</span>
+        </div>
+
+        <!-- Карточка 3 -->
+        <div class="dark-glass rounded-3xl p-8 flex flex-col items-center text-center group cursor-pointer hover:-translate-y-2 transition-transform duration-500">
+          <div class="w-full aspect-[3/4] mb-8 overflow-hidden rounded-2xl relative">
+             <div class="absolute inset-0 bg-pineNeedle/20 mix-blend-color z-10 group-hover:opacity-0 transition-opacity"></div>
+             <img src="https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=2041&auto=format&fit=crop" alt="" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+          </div>
+          <h3 class="font-serif text-2xl mb-2 text-oatCream">Дегустационный Сет</h3>
+          <p class="text-sm opacity-70 mb-6">4 вкуса • Идеально для старта</p>
+          <span class="border border-oatCream/30 px-6 py-2 rounded-full text-xs uppercase tracking-widest group-hover:bg-oatCream group-hover:text-darkBark transition-colors">Выбрать</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Шаг 8: Дефицит & Шаг 9: Гарантии -->
+  <section class="py-24 bg-oatCream text-darkBark border-b border-darkBark/10">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h3 class="font-serif text-3xl mb-6">Лимитированная сезонная партия</h3>
+      <p class="text-darkBark/70 mb-8">Ручное производство ограничено. Остаток свежесобранной морошки на этой неделе:</p>
+      
+      <!-- Progress Bar -->
+      <div class="w-full h-1 bg-darkBark/10 rounded-full mb-4 overflow-hidden relative">
+        <div class="absolute left-0 top-0 h-full bg-cloudberry w-0 progress-bar rounded-full"></div>
+      </div>
+      <div class="flex justify-between text-xs font-bold uppercase tracking-widest mb-16">
+        <span class="text-cloudberry">Осталось 42 пачки</span>
+        <span>Из 200</span>
+      </div>
+
+      <!-- Гарантии -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-darkBark/10 pt-16">
+        <div class="flex flex-col items-center">
+          <div class="w-12 h-12 border border-darkBark flex items-center justify-center rounded-lg mb-4 rotate-45"><span class="-rotate-45">100%</span></div>
+          <p class="text-xs uppercase tracking-wider text-center">Натуральный состав</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="w-12 h-12 border border-darkBark flex items-center justify-center rounded-lg mb-4 rotate-45"><svg class="w-5 h-5 -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+          <p class="text-xs uppercase tracking-wider text-center">Прозрачный возврат</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="w-12 h-12 border border-darkBark flex items-center justify-center rounded-lg mb-4 rotate-45"><svg class="w-5 h-5 -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+          <p class="text-xs uppercase tracking-wider text-center">Собрано в Карелии</p>
+        </div>
+        <div class="flex flex-col items-center">
+          <div class="w-12 h-12 border border-darkBark flex items-center justify-center rounded-lg mb-4 rotate-45"><svg class="w-5 h-5 -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path></svg></div>
+          <p class="text-xs uppercase tracking-wider text-center">Без консервантов</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Шаг 11: Предупреждение (Deep Focus / Dark Mode) & Шаг 10: CTA -->
+  <section class="relative min-h-screen flex items-center justify-center bg-[#1A1A1A] overflow-hidden py-32">
+    <!-- Темный фоновый лес -->
+    <div class="absolute inset-0 z-0">
+      <img src="https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=2070&auto=format&fit=crop" alt="" class="w-full h-full object-cover opacity-20 filter contrast-125">
+      <div class="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] via-transparent to-[#1A1A1A]"></div>
+    </div>
+
+    <div class="relative z-10 text-center px-6 max-w-4xl flex flex-col items-center">
+      <h2 class="font-serif text-5xl md:text-8xl text-white mb-8">Остаться в рутине?</h2>
+      <p class="text-xl text-white/60 font-light mb-16 max-w-2xl mx-auto">
+        Возвращение к пустым калориям, утренней тяжести и нехватке витаминов — это выбор. Но вы заслуживаете заряд настоящей северной природы.
+      </p>
+      
+      <!-- Магнитная кнопка CTA -->
+      <button id="magnetic-btn" class="relative overflow-hidden bg-cloudberry text-white rounded-full px-12 py-6 flex items-center justify-center group w-64 h-64 mx-auto rounded-full hover:bg-honey transition-colors duration-500 shadow-2xl shadow-cloudberry/20">
+        <span class="magnetic-text font-serif text-2xl leading-none block text-center z-10 pointer-events-none">Получить <br>заряд <br>севера</span>
+        <!-- Свечение при наведении -->
+        <div class="absolute inset-0 bg-white/20 translate-y-full rounded-full group-hover:translate-y-0 transition-transform duration-500 ease-out z-0"></div>
+      </button>
+    </div>
+  </section>
+
+  <!-- Шаг 12: Футер (Возвращение к теплому свету) -->
+  <footer class="bg-oatCream text-darkBark pt-32 pb-12 px-6">
+    <div class="max-w-7xl mx-auto flex flex-col items-center text-center">
+      <h2 class="font-serif text-4xl md:text-6xl mb-8">Karelian Craft</h2>
+      <p class="max-w-md mx-auto mb-12 text-darkBark/70">
+        Чистая энергия северной природы. Оставьте email, чтобы получить скидку 15% на первый дегустационный набор.
+      </p>
+      
+      <form class="flex w-full max-w-md border-b border-darkBark pb-2 mb-24">
+        <input type="email" placeholder="Ваш Email" class="bg-transparent outline-none flex-grow placeholder-darkBark/40 text-darkBark uppercase tracking-widest text-sm">
+        <button type="submit" class="uppercase tracking-widest text-sm font-bold hover:text-cloudberry transition-colors">Отправить</button>
+      </form>
+
+      <div class="w-full flex flex-col md:flex-row justify-between items-center border-t border-darkBark/10 pt-8 text-xs uppercase tracking-widest text-darkBark/50">
+        <p>© 2026 Karelian Craft. Все права защищены.</p>
+        <div class="flex gap-6 mt-4 md:mt-0">
+          <a href="#" class="hover:text-darkBark transition-colors">Instagram</a>
+          <a href="#" class="hover:text-darkBark transition-colors">Telegram</a>
+        </div>
+        <a href="#" class="hover:text-darkBark transition-colors mt-4 md:mt-0">Политика конфиденциальности</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- GSAP & Plugins -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <!-- Lenis -->
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.23/bundled/lenis.min.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      gsap.registerPlugin(ScrollTrigger);
+
+      // --- Lenis Smooth Scroll ---
+      const lenis = new Lenis({
+        lerp: 0.08,
+        wheelMultiplier: 1,
+        smoothTouch: false
+      });
+      function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+      requestAnimationFrame(raf);
+
+      // --- Loader & Scramble Text ---
+      const scrambleEl = document.getElementById('scramble-text');
+      const finalWord = "Karelian Craft";
+      const chars = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+      let iterations = 0;
+      
+      const scrambleInterval = setInterval(() => {
+        scrambleEl.innerText = finalWord.split('').map((char, index) => {
+          if(index < iterations) return finalWord[index];
+          return chars[Math.floor(Math.random() * chars.length)];
+        }).join('');
+        
+        if(iterations >= finalWord.length) {
+          clearInterval(scrambleInterval);
+          finishLoading();
+        }
+        iterations += 1/3; // скорость расшифровки
+      }, 30);
+
+      function finishLoading() {
+        const tl = gsap.timeline();
+        tl.to("#loader", {
+          yPercent: -100,
+          duration: 1.2,
+          ease: "expo.inOut",
+          delay: 0.5
+        })
+        .to(".gsap-reveal", {
+          y: 0,
+          opacity: 1,
+          duration: 1,
+          stagger: 0.2,
+          ease: "power3.out"
+        }, "-=0.5");
+      }
+
+      // --- Шаг 3: Rack Focus Effect ---
+      // Размываем фон и фокусируемся на упаковке при скролле
+      gsap.to(".rack-bg", {
+        scrollTrigger: {
+          trigger: "#solution",
+          start: "top center",
+          end: "center center",
+          scrub: true
+        },
+        filter: "blur(12px)",
+        scale: 1.05
+      });
+      
+      gsap.fromTo(".rack-product", 
+        { filter: "blur(10px)", scale: 0.8, opacity: 0 },
+        {
+          scrollTrigger: {
+            trigger: "#solution",
+            start: "top center",
+            end: "center center",
+            scrub: true
+          },
+          filter: "blur(0px)",
+          scale: 1,
+          opacity: 1
+        }
+      );
+
+      // --- Шаг 4: Kinetic Typography (Счетчики) ---
+      const counters = document.querySelectorAll('.counter');
+      counters.forEach(counter => {
+        ScrollTrigger.create({
+          trigger: counter,
+          start: "top 80%",
+          once: true,
+          onEnter: () => {
+            const target = +counter.getAttribute('data-target');
+            gsap.to(counter, {
+              innerHTML: target,
+              duration: 2,
+              ease: "power2.out",
+              snap: { innerHTML: 1 },
+              onUpdate: function() {
+                counter.innerHTML = Math.round(this.targets()[0].innerHTML);
+              }
+            });
+          }
+        });
+      });
+
+      // --- Шаг 8: Прогресс-бар дефицита ---
+      gsap.to(".progress-bar", {
+        scrollTrigger: {
+          trigger: ".progress-bar",
+          start: "top 90%",
+          end: "bottom center",
+          scrub: 1
+        },
+        width: "21%" // 42 из 200
+      });
+
+      // --- Шаг 10: Magnetic Button ---
+      const magBtn = document.getElementById("magnetic-btn");
+      const magText = magBtn.querySelector(".magnetic-text");
+      
+      magBtn.addEventListener("mousemove", (e) => {
+        const rect = magBtn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        
+        gsap.to(magBtn, {
+          x: x * 0.3,
+          y: y * 0.3,
+          duration: 0.4,
+          ease: "power2.out"
+        });
+        gsap.to(magText, {
+          x: x * 0.2,
+          y: y * 0.2,
+          duration: 0.4,
+          ease: "power2.out"
+        });
+      });
+
+      magBtn.addEventListener("mouseleave", () => {
+        gsap.to(magBtn, {
+          x: 0,
+          y: 0,
+          duration: 0.8,
+          ease: "elastic.out(1, 0.3)"
+        });
+        gsap.to(magText, {
+          x: 0,
+          y: 0,
+          duration: 0.8,
+          ease: "elastic.out(1, 0.3)"
+        });
+      });
+
+      // Параллакс изображения в Bento UI
+      gsap.to(".bg-pineNeedle img", {
+        scrollTrigger: {
+          trigger: ".bg-pineNeedle",
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        },
+        yPercent: 20,
+        ease: "none"
+      });
+
+    });
+  </script>
+</body>
+</html>
